@@ -1,21 +1,18 @@
-import React from 'react'
-import './List.css'
-import Card from '../Card/Card'
-import noPriority from '../../Assets/No-priority.svg'
-import lowPriority from '../../Assets/Img - Low Priority.svg'
-import medPriority from '../../Assets/Img - Medium Priority.svg'
-import highPriority from '../../Assets/Img - High Priority.svg'
-import urgentPriority from '../../Assets/SVG - Urgent Priority colour.svg'
-import backlog from '../../Assets/Backlog.svg'
-import todo from '../../Assets/To-do.svg'
-import done from '../../Assets/Done.svg'
-import inProgress from '../../Assets/in-progress.svg'
-import cancelled from '../../Assets/Cancelled.svg'
-import add from '../../Assets/add.svg'
-import dotMenu from '../../Assets/3 dot menu.svg'
-
-
-let cardCount = 0;
+import React from 'react';
+import './List.css';
+import Card from '../Card/Card';
+import noPriority from '../../Assets/No-priority.svg';
+import lowPriority from '../../Assets/Img - Low Priority.svg';
+import medPriority from '../../Assets/Img - Medium Priority.svg';
+import highPriority from '../../Assets/Img - High Priority.svg';
+import urgentPriority from '../../Assets/SVG - Urgent Priority colour.svg';
+import backlog from '../../Assets/Backlog.svg';
+import todo from '../../Assets/To-do.svg';
+import done from '../../Assets/Done.svg';
+import inProgress from '../../Assets/in-progress.svg';
+import cancelled from '../../Assets/Cancelled.svg';
+import add from '../../Assets/add.svg';
+import dotMenu from '../../Assets/3 dot menu.svg';
 
 const getInitials = (name) => {
     if (typeof name === 'string' && name.length > 0) {
@@ -28,6 +25,14 @@ const getInitials = (name) => {
 };
 
 export default function List(props) {
+    const filteredTickets = props.ticketDetails.filter(ticket =>
+        ticket.status === props.listTitle ||
+        ticket.priority === props.listTitle ||
+        ticket.userObj.name === props.listTitle
+    );
+
+    const cardCount = filteredTickets.length;
+
     return (
         <>
             <div className="list-container">
@@ -114,17 +119,12 @@ export default function List(props) {
 
                 <div className="list-card-items">
                     {
-                        props.ticketDetails.map(ticket => {
-                            if (ticket.status === props.listTitle || ticket.priority === props.listTitle || ticket.userObj.name === props.listTitle) {
-                                cardCount++;
-                                return (<Card cardDetails={ticket} groupValue={props.groupValue} />); // Pass groupValue here
-                            }
-                            return null;
-                        }, cardCount = 0)
+                        filteredTickets.map(ticket => (
+                            <Card key={ticket.id} cardDetails={ticket} groupValue={props.groupValue} />
+                        ))
                     }
                 </div>
-
             </div>
         </>
-    )
+    );
 }
